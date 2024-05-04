@@ -52,6 +52,6 @@ com:
           dealersByCode: http://localhost:9091/api/v0.1/state/dealersByCode/{code}
           discount: http://localhost:9091/api/v0.1/state/discount/{code}/{type}
         dealers:
-          cars: http://localhost:9091/api/v0.1/dealer/{id}
+          cars: http://localhost:9092/api/v0.1/dealer/{id}
         manufacturers:
-          price: http://localhost:9091/api/v0.1/manufacturer/{id}
+          price: http://localhost:9093/api/v0.1/manufacturer/{id}
