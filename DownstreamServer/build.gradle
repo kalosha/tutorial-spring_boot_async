@@ -1,0 +1,79 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.jsonschema2pojo' version '1.2.1'
+}
+
+group = 'com.epam.community'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
+
+ext {
+    springdocVersion = '2.1.0'
+    generatedDir = 'src/main/generated/java'
+    generatedTargetPackage = 'com.epam.community.downstreamserver.generated'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+// schema generator -> https://bjdash.github.io/JSON-Schema-Builder/
+jsonSchema2Pojo {
+    // Specify the source directory for JSON schema
+    source = files("src/main/resources/jsonschema")
+
+    // Specify the target directory for generated Java classes
+    targetDirectory = file(this.ext.generatedDir)
+
+    // Configuration options
+    targetPackage = this.ext.generatedTargetPackage
+    includeHashcodeAndEquals = false
+    includeToString = false
+    includeConstructors = true
+    includeAllPropertiesConstructor = true
+    includeAdditionalProperties = false
+
+}
+
+// Ensure that the generated sources are compiled
+sourceSets {
+    main {
+        java {
+            srcDir jsonSchema2Pojo.targetDirectory
+        }
+    }
+}
+
+clean.doFirst {
+    delete this.ext.generatedDir
+}
+
+build.doLast {
+//    delete generatedDir+'/' + this.ext.generatedTargetPackage.replace('.', '/') + '/App.java'
+}
