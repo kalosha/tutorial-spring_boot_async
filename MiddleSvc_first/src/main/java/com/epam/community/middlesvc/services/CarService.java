@@ -57,17 +57,18 @@ public class CarService {
                                             .ifPresent(discount -> price[0] -= ((price[0] * this.stateClient.getDiscountByType(stateCode, discount.type())) / 100)); // Downstream call 4
                                 }
 
-                                val carModel = new CarModel(
-                                        car.id(),
-                                        car.model(),
-                                        car.year(),
-                                        dealer.id(),
-                                        dealer.name(),
-                                        dealerInfo.getPriceWithOverhead(price[0]),
-                                        car.manufacturer(),
-                                        car.manufacturerId(),
-                                        car.fullType(),
-                                        car.type());
+                                val carModel = CarModel.builder()
+                                        .id(car.id())
+                                        .model(car.model())
+                                        .year(car.year())
+                                        .dealerId(dealer.id())
+                                        .dealer(dealer.name())
+                                        .price(dealerInfo.getPriceWithOverhead(price[0]))
+                                        .manufacturer(car.manufacturer())
+                                        .manufacturerId(car.manufacturerId())
+                                        .fullType(car.fullType())
+                                        .type(car.type())
+                                        .build();
 
                                 carModels.putIfAbsent(generateCarId(stateCode, dealer.id(), car.id()), carModel);
                             });

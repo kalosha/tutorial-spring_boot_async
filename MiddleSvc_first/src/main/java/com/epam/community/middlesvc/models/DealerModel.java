@@ -1,7 +1,10 @@
 package com.epam.community.middlesvc.models;
 
+import lombok.Builder;
+
 import java.util.List;
 
+@Builder
 public record DealerModel(
         int id,
         String name,

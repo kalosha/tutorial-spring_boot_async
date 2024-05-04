@@ -44,20 +44,21 @@ public class DealerClient {
                 ).getBody()
         );
 
-        return new DealerModel(
-                dealerResponse.id(),
-                dealerResponse.name(),
-                dealerResponse.overhead(),
-                dealerResponse.cars().stream()
-                        .map(car -> new DealerCarModel(
-                                car.id(),
-                                car.model(),
-                                car.year(),
-                                car.manufacturer().name(),
-                                car.manufacturer().id(),
-                                CarFullTypeEnum.fromString(car.fullType()),
-                                CarTypeEnum.fromString(car.type())
-                        )).toList()
-        );
+        return DealerModel.builder()
+                .id(dealerResponse.id())
+                .name(dealerResponse.name())
+                .overhead(dealerResponse.overhead())
+                .cars(dealerResponse.cars().stream()
+                        .map(car -> DealerCarModel.builder()
+                                .id(car.id())
+                                .model(car.model())
+                                .year(car.year())
+                                .manufacturer(car.manufacturer().name())
+                                .manufacturerId(car.manufacturer().id())
+                                .fullType(CarFullTypeEnum.fromString(car.fullType()))
+                                .type(CarTypeEnum.fromString(car.type()))
+                                .build()
+                        ).toList()
+                ).build();
     }
 }

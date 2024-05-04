@@ -1,5 +1,8 @@
 package com.epam.community.middlesvc.models;
 
+import lombok.Builder;
+
+@Builder
 public record CarModel(
         int id,
         String model,

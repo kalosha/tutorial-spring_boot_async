@@ -67,7 +67,10 @@ public class StateClient {
                                 },
                                 Map.of("code", code)
                         ).getBody()).stream()
-                .map(response -> new IdNameModel(response.id(), response.name()))
+                .map(response -> IdNameModel.builder()
+                        .id(response.id())
+                        .name(response.name())
+                        .build())
                 .toList();
     }
 
@@ -83,14 +86,19 @@ public class StateClient {
                 ).getBody()
         );
 
-        return new StateModel(stateResponse.id(),
-                stateResponse.code(),
-                stateResponse.priceLimit(),
-                stateResponse.discounts()
+        return StateModel.builder()
+                .id(stateResponse.id())
+                .code(stateResponse.code())
+                .priceLimit(stateResponse.priceLimit())
+                .discounts(stateResponse.discounts()
                         .stream()
-                        .map(discount -> new DiscountModel(discount.id(), discount.name(), discount.type()))
-                        .toList()
-        );
+                        .map(discount -> DiscountModel.builder()
+                                .id(discount.id())
+                                .name(discount.name())
+                                .type(discount.type())
+                                .build())
+                        .toList())
+                .build();
     }
 
     public int getDiscountByType(final String stateCode, final String type) {
