@@ -5,6 +5,7 @@ import com.epam.community.middlesvc.clients.ManufacturerClient;
 import com.epam.community.middlesvc.clients.StateClient;
 import com.epam.community.middlesvc.models.*;
 import io.micrometer.tracing.Tracer;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -114,13 +115,18 @@ public class CarAsyncService {
             return CompletableFuture.completedFuture(0);
         });
         return CompletableFuture.allOf(priceFeature, discountFeature)
-                .thenApplyAsync(voidResult -> new CollectedData(dealerModel,
-                        carModel,
-                        priceFeature.join(),
-                        discountFeature.join())
+                .thenApplyAsync(voidResult ->
+                        CollectedData.builder()
+                                .dealer(dealerModel)
+                                .carModel(carModel)
+                                .manufacturerPrice(priceFeature.join())
+                                .stateDiscountPercent(discountFeature.join())
+                                .build()
                 );
     }
 
+
+    @Builder
     private record CollectedData(DealerModel dealer,
                                  DealerCarModel carModel,
                                  Integer manufacturerPrice,
