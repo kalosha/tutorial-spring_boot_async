@@ -1,0 +1,524 @@
+[
+  {
+    "id": 101,
+    "manufacturer_id": 100,
+    "model": "Leaf",
+    "year": 2020,
+    "price": 28140,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 102,
+    "manufacturer_id": 100,
+    "model": "Ariya",
+    "year": 2023,
+    "price": 43190,
+    "fuelType": "Electric",
+    "type": "SUV"
+  },
+  {
+    "id": 103,
+    "manufacturer_id": 100,
+    "model": "Rogue",
+    "year": 2021,
+    "price": 28010,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 104,
+    "manufacturer_id": 100,
+    "model": "Murano",
+    "year": 2023,
+    "price": 38090,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 105,
+    "manufacturer_id": 100,
+    "model": "Armada",
+    "year": 2022,
+    "price": 55620,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 106,
+    "manufacturer_id": 100,
+    "model": "Pathfinder",
+    "year": 2020,
+    "price": 36080,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 107,
+    "manufacturer_id": 100,
+    "model": "Kicks",
+    "year": 2024,
+    "price": 20950,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 201,
+    "manufacturer_id": 200,
+    "model": "Outlander",
+    "year": 2024,
+    "price": 40345,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 202,
+    "manufacturer_id": 200,
+    "model": "Mirage",
+    "year": 2024,
+    "price": 18695,
+    "fuelType": "Gasoline",
+    "type": "Sedan"
+  },
+  {
+    "id": 203,
+    "manufacturer_id": 200,
+    "model": "iMiev",
+    "year": 2024,
+    "price": 19060,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 204,
+    "manufacturer_id": 200,
+    "model": "Eclipse",
+    "year": 2024,
+    "price": 26345,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 301,
+    "manufacturer_id": 300,
+    "model": "Model S",
+    "year": 2024,
+    "price": 74990,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 302,
+    "manufacturer_id": 300,
+    "model": "Model Y",
+    "year": 2024,
+    "price": 48990,
+    "fuelType": "Electric",
+    "type": "SUV"
+  },
+  {
+    "id": 303,
+    "manufacturer_id": 300,
+    "model": "Model 3",
+    "year": 2024,
+    "price": 38990,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 304,
+    "manufacturer_id": 300,
+    "model": "Model X",
+    "year": 2024,
+    "price": 79990,
+    "fuelType": "Electric",
+    "type": "SUV"
+  },
+  {
+    "id": 401,
+    "manufacturer_id": 400,
+    "model": "Mazda CX-30",
+    "year": 2024,
+    "price": 24995,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 402,
+    "manufacturer_id": 400,
+    "model": "Mazda CX-5",
+    "year": 2024,
+    "price": 29300,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 403,
+    "manufacturer_id": 400,
+    "model": "Mazda CX-50",
+    "year": 2024,
+    "price": 30300,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 404,
+    "manufacturer_id": 400,
+    "model": "Mazda CX-90",
+    "year": 2024,
+    "price": 39595,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 405,
+    "manufacturer_id": 400,
+    "model": "Mazda3 Sedan",
+    "year": 2024,
+    "price": 24170,
+    "fuelType": "Hybrid",
+    "type": "Sedan"
+  },
+  {
+    "id": 406,
+    "manufacturer_id": 400,
+    "model": "Mazda MX-5 Miata",
+    "year": 2024,
+    "price": 28050,
+    "fuelType": "Electric",
+    "type": "SUV"
+  },
+  {
+    "id": 501,
+    "manufacturer_id": 500,
+    "model": "HR-V",
+    "year": 2024,
+    "price": 24600,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 502,
+    "manufacturer_id": 500,
+    "model": "CR-V",
+    "year": 2024,
+    "price": 29500,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 503,
+    "manufacturer_id": 500,
+    "model": "Pilot",
+    "year": 2024,
+    "price": 37090,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 504,
+    "manufacturer_id": 500,
+    "model": "Passport",
+    "year": 2024,
+    "price": 41900,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 505,
+    "manufacturer_id": 500,
+    "model": "Civic",
+    "year": 2024,
+    "price": 23950,
+    "fuelType": "Hybrid",
+    "type": "Sedan"
+  },
+  {
+    "id": 506,
+    "manufacturer_id": 500,
+    "model": "Accord",
+    "year": 2024,
+    "price": 27895,
+    "fuelType": "Gasoline",
+    "type": "Sedan"
+  },
+  {
+    "id": 601,
+    "manufacturer_id": 600,
+    "model": "Soul",
+    "year": 2024,
+    "price": 20190,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 602,
+    "manufacturer_id": 600,
+    "model": "Seltos",
+    "year": 2024,
+    "price": 24490,
+    "fuelType": "Hybrid",
+    "type": "Sedan"
+  },
+  {
+    "id": 603,
+    "manufacturer_id": 600,
+    "model": "Sportage",
+    "year": 2024,
+    "price": 27190,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 604,
+    "manufacturer_id": 600,
+    "model": "Sorento",
+    "year": 2024,
+    "price": 30390,
+    "fuelType": "Hybrid",
+    "type": "Sedan"
+  },
+  {
+    "id": 605,
+    "manufacturer_id": 600,
+    "model": "Niro",
+    "year": 2024,
+    "price": 26940,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 606,
+    "manufacturer_id": 600,
+    "model": "Sportage Hybrid",
+    "year": 2024,
+    "price": 39590,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 607,
+    "manufacturer_id": 600,
+    "model": "EV9",
+    "year": 2024,
+    "price": 54900,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 701,
+    "manufacturer_id": 700,
+    "model": "Kona",
+    "year": 2024,
+    "price": 32675,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 702,
+    "manufacturer_id": 700,
+    "model": "Tucson",
+    "year": 2024,
+    "price": 32325,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 703,
+    "manufacturer_id": 700,
+    "model": "SantaFe",
+    "year": 2024,
+    "price": 36210,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 704,
+    "manufacturer_id": 700,
+    "model": "Ioniq 5",
+    "year": 2024,
+    "price": 41800,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 705,
+    "manufacturer_id": 700,
+    "model": "Ioniq 6",
+    "year": 2024,
+    "price": 42450,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 706,
+    "manufacturer_id": 700,
+    "model": "Elantra",
+    "year": 2024,
+    "price": 24550,
+    "fuelType": "Gasoline",
+    "type": "Sedan"
+  },
+  {
+    "id": 707,
+    "manufacturer_id": 700,
+    "model": "Sonata",
+    "year": 2024,
+    "price": 28450,
+    "fuelType": "Hybrid",
+    "type": "Sedan"
+  },
+  {
+    "id": 801,
+    "manufacturer_id": 800,
+    "model": "Mustang",
+    "year": 2024,
+    "price": 30920,
+    "fuelType": "Electric",
+    "type": "Sedan"
+  },
+  {
+    "id": 802,
+    "manufacturer_id": 800,
+    "model": "Escape",
+    "year": 2024,
+    "price": 29495,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 803,
+    "manufacturer_id": 800,
+    "model": "Bronco",
+    "year": 2024,
+    "price": 31230,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 804,
+    "manufacturer_id": 800,
+    "model": "Explorer",
+    "year": 2024,
+    "price": 36860,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 805,
+    "manufacturer_id": 800,
+    "model": "Edge",
+    "year": 2024,
+    "price": 38462,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 806,
+    "manufacturer_id": 800,
+    "model": "Expedition",
+    "year": 2024,
+    "price": 55525,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 807,
+    "manufacturer_id": 800,
+    "model": "Maverick",
+    "year": 2024,
+    "price": 23815,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 808,
+    "manufacturer_id": 800,
+    "model": "Ranger",
+    "year": 2024,
+    "price": 32670,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 809,
+    "manufacturer_id": 800,
+    "model": "F-150",
+    "year": 2024,
+    "price": 34585,
+    "fuelType": "Electric",
+    "type": "Truck"
+  },
+  {
+    "id": 810,
+    "manufacturer_id": 800,
+    "model": "Super Duty",
+    "year": 2024,
+    "price": 44970,
+    "fuelType": "Hybrid",
+    "type": "Truck"
+  },
+  {
+    "id": 901,
+    "manufacturer_id": 900,
+    "model": "Wagoneer",
+    "year": 2024,
+    "price": 62945,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 902,
+    "manufacturer_id": 900,
+    "model": "Grand Cherokee",
+    "year": 2024,
+    "price": 36495,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 903,
+    "manufacturer_id": 900,
+    "model": "Compass",
+    "year": 2024,
+    "price": 25900,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  },
+  {
+    "id": 904,
+    "manufacturer_id": 900,
+    "model": "Cheroke",
+    "year": 2024,
+    "price": 37695,
+    "fuelType": "Electric",
+    "type": "SUV"
+  },
+  {
+    "id": 905,
+    "manufacturer_id": 900,
+    "model": "Ranger",
+    "year": 2024,
+    "price": 28445,
+    "fuelType": "Electric",
+    "type": "SUV"
+  },
+  {
+    "id": 906,
+    "manufacturer_id": 900,
+    "model": "Wrangler",
+    "year": 2024,
+    "price": 31995,
+    "fuelType": "Gasoline",
+    "type": "SUV"
+  },
+  {
+    "id": 907,
+    "manufacturer_id": 900,
+    "model": "Gladiator",
+    "year": 2024,
+    "price": 38990,
+    "fuelType": "Hybrid",
+    "type": "SUV"
+  }
+]

@@ -1,0 +1,126 @@
+[
+  {
+    "id": 1,
+    "code": "ME",
+    "priceLimit": 20000,
+    "discounts": [
+      2,
+      6
+    ]
+  },
+  {
+    "id": 2,
+    "code": "NH",
+    "priceLimit": 20000,
+    "discounts": [
+      3
+    ]
+  },
+  {
+    "id": 3,
+    "code": "MA",
+    "priceLimit": 20000,
+    "discounts": [
+      5,
+      4
+    ]
+  },
+  {
+    "id": 4,
+    "code": "RI",
+    "priceLimit": 20000,
+    "discounts": [
+      2,
+      5,
+      3
+    ]
+  },
+  {
+    "id": 5,
+    "code": "CT",
+    "priceLimit": 20000,
+    "discounts": [
+      3,
+      5
+    ]
+  },
+  {
+    "id": 6,
+    "code": "NY",
+    "priceLimit": 20000,
+    "discounts": []
+  },
+  {
+    "id": 7,
+    "code": "NJ",
+    "priceLimit": 20000,
+    "discounts": [
+      1,
+      3,
+      2
+    ]
+  },
+  {
+    "id": 8,
+    "code": "DE",
+    "priceLimit": 20000,
+    "discounts": [
+      4,
+      2
+    ]
+  },
+  {
+    "id": 9,
+    "code": "MD",
+    "priceLimit": 20000,
+    "discounts": [
+      6,
+      3,
+      4
+    ]
+  },
+  {
+    "id": 10,
+    "code": "VA",
+    "priceLimit": 20000,
+    "discounts": [
+      3,
+      4
+    ]
+  },
+  {
+    "id": 11,
+    "code": "NC",
+    "priceLimit": 20000,
+    "discounts": [
+      4
+    ]
+  },
+  {
+    "id": 12,
+    "code": "SC",
+    "priceLimit": 20000,
+    "discounts": [
+      4,
+      2
+    ]
+  },
+  {
+    "id": 13,
+    "code": "GA",
+    "priceLimit": 20000,
+    "discounts": [
+      3,
+      2,
+      1
+    ]
+  },
+  {
+    "id": 14,
+    "code": "FL",
+    "priceLimit": 20000,
+    "discounts": [
+      4
+    ]
+  }
+]

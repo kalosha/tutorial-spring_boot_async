@@ -1,0 +1,45 @@
+server:
+  port: 9091
+  shutdown: graceful
+  tomcat:
+    threads:
+      max: 5
+      min-spare: 1
+  forward-headers-strategy: framework
+  servlet:
+    application-display-name: DownstreamServer
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+    org.springframework.web.servlet: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+    org.springframework.jmx: INFO
+    org.springframework.cloud.config.client: INFO
+    org.springframework.cloud.context: INFO
+    org.hibernate: INFO
+    org.hibernate.sql: INFO
+    com.emap: INFO
+  pattern:
+    console: '%date{HH:mm:ss.SSS} [%-5level][%X{traceId:-},%X{spanId:-}] %-65logger - %msg%n'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:8411/api/v2/spans
+spring:
+  application:
+    name: DownstreamServer

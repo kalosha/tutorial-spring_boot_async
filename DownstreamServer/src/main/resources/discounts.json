@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Electric Vehicle (EV) Tax Credits and Rebates",
+    "type": "ELECTRIC",
+    "percent": 15
+  },
+  {
+    "id": 2,
+    "name": "Hybrid Vehicle Incentives",
+    "type": "HYBRID",
+    "percent": 10
+  },
+  {
+    "id": 3,
+    "name": "Student Discount",
+    "type": "SPECIAL",
+    "percent": 4
+  },
+  {
+    "id": 4,
+    "name": "Military Discount",
+    "type": "SPECIAL",
+    "percent": 4
+  },
+  {
+    "id": 5,
+    "name": "Referral Discount",
+    "type": "SPECIAL",
+    "percent": 2
+  },
+  {
+    "id": 6,
+    "name": "Cash Discount",
+    "type": "SPECIAL",
+    "percent": 5
+  }
+]

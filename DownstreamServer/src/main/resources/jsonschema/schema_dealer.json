@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/app",
+  "definitions": {
+    "app": {
+      "type": "object",
+      "$ref": "#/definitions/dealer"
+    },
+    "dealer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "overhead": {
+          "type": "integer"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  }
+}

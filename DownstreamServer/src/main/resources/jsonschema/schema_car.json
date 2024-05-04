@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/app",
+  "definitions": {
+    "app": {
+      "type": "object",
+      "$ref": "#/definitions/car"
+    },
+    "car": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "manufacturer_id": {
+          "type": "integer"
+        },
+        "model": {
+          "type": "string"
+        },
+        "year": {
+          "type": "integer"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "fuelType": {
+          "type": "string",
+          "enum": [
+            "Gasoline",
+            "Hybrid",
+            "Electric"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Sedan",
+            "SUV",
+            "Truck"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "manufacturer"
+      ]
+    }
+  }
+}
