@@ -1,0 +1,4 @@
+
+cd /home/kalo/dev/IdeaProjects/EPAM/community/DownstreamServer/build/libs && java -Dserver.port=9091 -Dcom.epam.sleepTime=10 -Dserver.tomcat.threads.max=5 -Dserver.tomcat.threads.min-spare=1 -Dspring.application.name=StateSvc -jar DownstreamServer-0.0.1-SNAPSHOT.jar
+cd /home/kalo/dev/IdeaProjects/EPAM/community/DownstreamServer/build/libs && java -Dserver.port=9092 -Dcom.epam.sleepTime=10 -Dserver.tomcat.threads.max=5 -Dserver.tomcat.threads.min-spare=1 -Dspring.application.name=DealerSvc -jar DownstreamServer-0.0.1-SNAPSHOT.jar
+cd /home/kalo/dev/IdeaProjects/EPAM/community/DownstreamServer/build/libs && java -Dserver.port=9093 -Dcom.epam.sleepTime=10 -Dserver.tomcat.threads.max=5 -Dserver.tomcat.threads.min-spare=1 -Dspring.application.name=ManufacturerSvc -jar DownstreamServer-0.0.1-SNAPSHOT.jar
