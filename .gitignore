@@ -37,3 +37,4 @@ out/
 .vscode/
 /src/main/generated/java/com/epam/community/downstreamserver/generated/
 /docs/.$CompletableFuture.drawio.bkp
+/DownstreamServer/src/main/generated/
