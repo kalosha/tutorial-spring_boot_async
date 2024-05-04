@@ -1,0 +1,58 @@
+server:
+  port: 9090
+  shutdown: graceful
+  tomcat:
+    threads:
+      max: 100
+      min-spare: 100
+  forward-headers-strategy: framework
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+    org.springframework.web.servlet: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
+    org.springframework.jmx: INFO
+    org.springframework.cloud.config.client: INFO
+    org.springframework.cloud.context: INFO
+    org.hibernate: INFO
+    org.hibernate.sql: INFO
+    com.emap: INFO
+  pattern:
+    console: '%date{HH:mm:ss.SSS} [%-5level][%X{traceId:-},%X{spanId:-}] %-65logger - %msg%n'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,beans,env,metrics,httptrace,loggers,threaddump
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    propagation:
+      type: b3_multi
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:8411/api/v2/spans
+spring:
+  application:
+    name: MiddleSvcAsync
+
+com:
+  epam:
+    community:
+      endpoints:
+        states:
+          list: http://localhost:9091/api/v0.1/state
+          dealersByCode: http://localhost:9091/api/v0.1/state/dealersByCode/{code}
+          discount: http://localhost:9091/api/v0.1/state/discount/{code}/{type}
+        dealers:
+          cars: http://localhost:9092/api/v0.1/dealer/{id}
+        manufacturers:
+          price: http://localhost:9093/api/v0.1/manufacturer/{id}
