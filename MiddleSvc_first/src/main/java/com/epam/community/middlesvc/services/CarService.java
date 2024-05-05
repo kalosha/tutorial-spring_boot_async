@@ -28,7 +28,6 @@ public class CarService {
     private final DealerClient dealerClient;
     private final StateClient stateClient;
     private final ManufacturerClient manufacturerClient;
-
     private final Executor generalAsyncExecutor;
 
     public CarService(final DealerClient dealerClient,

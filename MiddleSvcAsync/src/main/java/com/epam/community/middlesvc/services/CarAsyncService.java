@@ -4,10 +4,10 @@ import com.epam.community.middlesvc.clients.DealerClient;
 import com.epam.community.middlesvc.clients.ManufacturerClient;
 import com.epam.community.middlesvc.clients.StateClient;
 import com.epam.community.middlesvc.models.*;
-import io.micrometer.tracing.Tracer;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @Service
 @Slf4j
@@ -24,16 +25,16 @@ public class CarAsyncService {
     private final DealerClient dealerClient;
     private final StateClient stateClient;
     private final ManufacturerClient manufacturerClient;
-    private final Tracer tracer;
+    private final Executor generalAsyncExecutor;
 
     public CarAsyncService(final DealerClient dealerClient,
                            final StateClient stateClient,
                            final ManufacturerClient manufacturerClient,
-                           final Tracer tracer) {
+                           @Qualifier("generalAsyncExecutor") final Executor generalAsyncExecutor) {
         this.dealerClient = dealerClient;
         this.stateClient = stateClient;
         this.manufacturerClient = manufacturerClient;
-        this.tracer = tracer;
+        this.generalAsyncExecutor = generalAsyncExecutor;
     }
 
 
@@ -42,8 +43,6 @@ public class CarAsyncService {
                                                  final CarFullTypeEnum carFullType,
                                                  final int maxCars) {
         log.info("Getting 3 cheapest cars in State: {} CarType: {}, CarFullType: {}", stateCode, carType, carFullType);
-
-        log.info("traceId: {}", this.tracer.currentSpan().context().traceId());
 
         // DATA collecting stage
         val carModels = new HashMap<String, CarModel>();
@@ -62,10 +61,11 @@ public class CarAsyncService {
                                                         return manufacturerCollectedFeatures.stream().map(CompletableFuture::join)
                                                                 .toList();
                                                     }
-                                            );
+                                            , this.generalAsyncExecutor);
                                     return dealerInfo.join().stream().toList();
                                 })
-                        .toList());
+                        .toList(),
+                        this.generalAsyncExecutor);
 
         collectedFeatures.join().stream()
                 .flatMap(Collection::stream)
@@ -113,7 +113,7 @@ public class CarAsyncService {
                 return this.stateClient.getDiscountByType(stateModel.code(), carModel.fullType());  // Downstream call 4
             }
             return CompletableFuture.completedFuture(0);
-        });
+        }, this.generalAsyncExecutor);
         return CompletableFuture.allOf(priceFeature, discountFeature)
                 .thenApplyAsync(voidResult ->
                         CollectedData.builder()
@@ -121,7 +121,8 @@ public class CarAsyncService {
                                 .carModel(carModel)
                                 .manufacturerPrice(priceFeature.join())
                                 .stateDiscountPercent(discountFeature.join())
-                                .build()
+                                .build(),
+                        this.generalAsyncExecutor
                 );
     }
 

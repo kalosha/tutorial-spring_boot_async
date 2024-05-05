@@ -1,7 +1,7 @@
 package com.epam.community.middlesvc.configs;
 
-import brave.Tracing;
-import brave.propagation.CurrentTraceContext;
+import io.micrometer.context.ContextExecutorService;
+import io.micrometer.context.ContextSnapshotFactory;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,12 +44,7 @@ public class ExecutorConfig {
 
     @Bean(name = "generalAsyncExecutor")
     public Executor securityContextExecutor(final TaskDecorator otelTaskDecorator) {
-        val executor = new ThreadPoolTaskExecutor() {
-            @Override
-            public void execute(Runnable task) {
-                super.execute(otelTaskDecorator.decorate(task));
-            }
-        };
+        val executor = new ThreadPoolTaskExecutor();
         executor.setAwaitTerminationSeconds(this.generalAwaitTermSecs);
         executor.setCorePoolSize(this.generalCorePoolSize);
         executor.setKeepAliveSeconds(this.generalKeepAliveSecs);
@@ -60,9 +55,7 @@ public class ExecutorConfig {
         executor.setTaskDecorator(otelTaskDecorator);
         executor.initialize();
 
-        Tracing tracing = Tracing.newBuilder().build();
-        CurrentTraceContext currentTraceContext = tracing.currentTraceContext();
-        return currentTraceContext.executor(executor);
+        return ContextExecutorService.wrap(executor.getThreadPoolExecutor(), ContextSnapshotFactory.builder().build()::captureAll);
     }
 
 }
