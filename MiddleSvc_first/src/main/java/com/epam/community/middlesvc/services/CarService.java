@@ -65,7 +65,7 @@ public class CarService {
                                                         return manufacturerCollectedFeatures.stream().map(CompletableFuture::join)
                                                                 .toList();
                                                     },
-                                                    ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor)
+                                                    this.generalAsyncExecutor
                                             );
                                     return dealerInfoFuture.join().stream().toList();
                                 })
@@ -102,27 +102,27 @@ public class CarService {
 
     private CompletableFuture<StateModel> getStateInformationFuture(final String stateCode) {
         return supplyAsync(() -> this.stateClient.getStateInformation(stateCode),
-                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+                this.generalAsyncExecutor);
     }
 
     private CompletableFuture<List<IdNameModel>> getDealersByStateFuture(final String stateCode) {
         return supplyAsync(() -> this.stateClient.getDealersByState(stateCode),
-                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+                this.generalAsyncExecutor);
     }
 
     private CompletableFuture<DealerModel> getDealerInfoFuture(final int id) {
         return supplyAsync(() -> this.dealerClient.getDealerInfo(id),
-                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+                this.generalAsyncExecutor);
     }
 
     private CompletableFuture<Integer> getPriceByCarIdFuture(final int id) {
         return supplyAsync(() -> this.manufacturerClient.getPriceByCarId(id),
-                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+                this.generalAsyncExecutor);
     }
 
     private CompletableFuture<Integer> getDiscountByTypeFuture(final String stateCode, final String type) {
         return supplyAsync(() -> this.stateClient.getDiscountByType(stateCode, type),
-                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+                this.generalAsyncExecutor);
     }
 
     private CompletableFuture<CollectedData> collectInformationFuture(final DealerModel dealerModel,
@@ -137,7 +137,7 @@ public class CarService {
                 return this.getDiscountByTypeFuture(stateModel.code(), carModel.fullType().name());  // Downstream call 4
             }
             return CompletableFuture.completedFuture(0);
-        }, ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+        }, this.generalAsyncExecutor);
 
         return CompletableFuture.allOf(priceFeature, discountFeature)
                 .thenApplyAsync(voidResult ->
@@ -147,7 +147,7 @@ public class CarService {
                                         .manufacturerPrice(priceFeature.join())
                                         .stateDiscountPercent(discountFeature.join())
                                         .build(),
-                        ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+                        this.generalAsyncExecutor);
     }
 
 

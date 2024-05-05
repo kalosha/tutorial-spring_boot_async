@@ -1,5 +1,6 @@
 package com.epam.community.middlesvc.configs;
 
+import io.micrometer.context.ContextSnapshot;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +54,7 @@ public class ExecutorConfig {
         executor.setTaskDecorator(otelTaskDecorator);
         executor.initialize();
 
-        return executor;
+        return ContextSnapshot.captureAll().wrapExecutor(executor);
     }
 
 }
