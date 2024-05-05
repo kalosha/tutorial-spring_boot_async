@@ -3,17 +3,23 @@ package com.epam.community.middlesvc.services;
 import com.epam.community.middlesvc.clients.DealerClient;
 import com.epam.community.middlesvc.clients.ManufacturerClient;
 import com.epam.community.middlesvc.clients.StateClient;
-import com.epam.community.middlesvc.models.CarFullTypeEnum;
-import com.epam.community.middlesvc.models.CarModel;
-import com.epam.community.middlesvc.models.CarTypeEnum;
+import com.epam.community.middlesvc.models.*;
+import io.micrometer.context.ContextSnapshot;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @Service
 @Slf4j
@@ -23,12 +29,16 @@ public class CarService {
     private final StateClient stateClient;
     private final ManufacturerClient manufacturerClient;
 
+    private final Executor generalAsyncExecutor;
+
     public CarService(final DealerClient dealerClient,
                       final StateClient stateClient,
-                      final ManufacturerClient manufacturerClient) {
+                      final ManufacturerClient manufacturerClient,
+                      @Qualifier("generalAsyncExecutor") final Executor generalAsyncExecutor) {
         this.dealerClient = dealerClient;
         this.stateClient = stateClient;
         this.manufacturerClient = manufacturerClient;
+        this.generalAsyncExecutor = generalAsyncExecutor;
     }
 
 
@@ -40,38 +50,45 @@ public class CarService {
 
         // DATA collecting stage
         val carModels = new HashMap<String, CarModel>();
-        val stateInfo = this.stateClient.getStateInformation(stateCode); // Downstream call 0
+        val stateInfo = this.getStateInformationFuture(stateCode).join();
+        val collectedFeatures = this.getDealersByStateFuture(stateCode)
+                .thenApply(dealers -> dealers.stream()
+                        .map(
+                                dealer -> {
+                                    val dealerInfoFuture = this.getDealerInfoFuture(dealer.id())
+                                            .thenApplyAsync(dealerMode -> {
+                                                        val manufacturerCollectedFeatures = dealerMode.cars().stream()
+                                                                .filter(car -> ObjectUtils.isEmpty(carType) || (carType == car.type()))
+                                                                .filter(car -> ObjectUtils.isEmpty(carFullType) || (carFullType == car.fullType()))
+                                                                .map(car -> this.collectInformationFuture(dealerMode, stateInfo, car))
+                                                                .toList();
+                                                        return manufacturerCollectedFeatures.stream().map(CompletableFuture::join)
+                                                                .toList();
+                                                    },
+                                                    ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor)
+                                            );
+                                    return dealerInfoFuture.join().stream().toList();
+                                })
+                        .toList());
 
-        this.stateClient.getDealersByState(stateCode) // Downstream call 1
-                .forEach(dealer -> { // FIRST iteration
-                    val dealerInfo = this.dealerClient.getDealerInfo(dealer.id()); // Downstream call 2
-                    dealerInfo.cars().stream()
-                            .filter(car -> ObjectUtils.isEmpty(carType) || (carType == car.type()))
-                            .filter(car -> ObjectUtils.isEmpty(carFullType) || (carFullType == car.fullType()))
-                            .forEach(car -> { // SECOND iteration
-                                final int[] price = {this.manufacturerClient.getPriceByCarId(car.id())}; // Downstream call 3
-                                if (price[0] > stateInfo.priceLimit()) {
-                                    stateInfo.discounts().stream()
-                                            .filter(discount -> discount.type().equalsIgnoreCase(car.fullType().name()))
-                                            .findFirst()
-                                            .ifPresent(discount -> price[0] -= ((price[0] * this.stateClient.getDiscountByType(stateCode, discount.type())) / 100)); // Downstream call 4
-                                }
-
-                                val carModel = CarModel.builder()
-                                        .id(car.id())
-                                        .model(car.model())
-                                        .year(car.year())
-                                        .dealerId(dealer.id())
-                                        .dealer(dealer.name())
-                                        .price(dealerInfo.getPriceWithOverhead(price[0]))
-                                        .manufacturer(car.manufacturer())
-                                        .manufacturerId(car.manufacturerId())
-                                        .fullType(car.fullType())
-                                        .type(car.type())
-                                        .build();
-
-                                carModels.putIfAbsent(generateCarId(stateCode, dealer.id(), car.id()), carModel);
-                            });
+        collectedFeatures.join().stream()
+                .flatMap(Collection::stream)
+                .forEach(collectedInfo -> {
+                    val carModel = CarModel.builder()
+                            .id(collectedInfo.carModel().id())
+                            .model(collectedInfo.carModel().model())
+                            .year(collectedInfo.carModel().year())
+                            .dealerId(collectedInfo.dealer().id())
+                            .dealer(collectedInfo.dealer().name())
+                            .price(collectedInfo.dealer().getPriceWithOverhead(
+                                    collectedInfo.manufacturerPrice() - ((collectedInfo.manufacturerPrice() * collectedInfo.stateDiscountPercent()) / 100)
+                            ))
+                            .manufacturer(collectedInfo.carModel().manufacturer())
+                            .manufacturerId(collectedInfo.carModel().manufacturerId())
+                            .fullType(collectedInfo.carModel().fullType())
+                            .type(collectedInfo.carModel().type())
+                            .build();
+                    carModels.put(generateCarId(stateCode, carModel.dealerId(), carModel.id()), carModel);
                 });
 
         // DATA manipulation stage, in our case sorting and limiting
@@ -82,9 +99,68 @@ public class CarService {
                 .toList();
     }
 
+
+    private CompletableFuture<StateModel> getStateInformationFuture(final String stateCode) {
+        return supplyAsync(() -> this.stateClient.getStateInformation(stateCode),
+                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+    }
+
+    private CompletableFuture<List<IdNameModel>> getDealersByStateFuture(final String stateCode) {
+        return supplyAsync(() -> this.stateClient.getDealersByState(stateCode),
+                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+    }
+
+    private CompletableFuture<DealerModel> getDealerInfoFuture(final int id) {
+        return supplyAsync(() -> this.dealerClient.getDealerInfo(id),
+                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+    }
+
+    private CompletableFuture<Integer> getPriceByCarIdFuture(final int id) {
+        return supplyAsync(() -> this.manufacturerClient.getPriceByCarId(id),
+                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+    }
+
+    private CompletableFuture<Integer> getDiscountByTypeFuture(final String stateCode, final String type) {
+        return supplyAsync(() -> this.stateClient.getDiscountByType(stateCode, type),
+                ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+    }
+
+    private CompletableFuture<CollectedData> collectInformationFuture(final DealerModel dealerModel,
+                                                                      final StateModel stateModel,
+                                                                      final DealerCarModel carModel) {
+        val priceFeature = this.getPriceByCarIdFuture(carModel.id()); // Downstream call 3
+
+        val discountFeature = priceFeature.thenComposeAsync(price -> {
+            if ((price > stateModel.priceLimit()) &&
+                    stateModel.discounts().stream()
+                            .anyMatch(discount -> discount.fullType() == carModel.fullType())) {
+                return this.getDiscountByTypeFuture(stateModel.code(), carModel.fullType().name());  // Downstream call 4
+            }
+            return CompletableFuture.completedFuture(0);
+        }, ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+
+        return CompletableFuture.allOf(priceFeature, discountFeature)
+                .thenApplyAsync(voidResult ->
+                                CollectedData.builder()
+                                        .dealer(dealerModel)
+                                        .carModel(carModel)
+                                        .manufacturerPrice(priceFeature.join())
+                                        .stateDiscountPercent(discountFeature.join())
+                                        .build(),
+                        ContextSnapshot.captureAll().wrapExecutor(this.generalAsyncExecutor));
+    }
+
+
     private static String generateCarId(final String stateCode,
                                         final int dealerId,
                                         final int carId) {
         return String.format("%s-D%d-C%d", stateCode, dealerId, carId);
+    }
+
+    @Builder
+    private record CollectedData(DealerModel dealer,
+                                 DealerCarModel carModel,
+                                 Integer manufacturerPrice,
+                                 Integer stateDiscountPercent) {
     }
 }

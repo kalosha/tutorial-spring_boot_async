@@ -2,6 +2,7 @@ package com.epam.community.middlesvc.clients;
 
 import com.epam.community.middlesvc.clients.responses.IdNameResponse;
 import com.epam.community.middlesvc.clients.responses.StateResponse;
+import com.epam.community.middlesvc.models.CarFullTypeEnum;
 import com.epam.community.middlesvc.models.DiscountModel;
 import com.epam.community.middlesvc.models.IdNameModel;
 import com.epam.community.middlesvc.models.StateModel;
@@ -96,6 +97,7 @@ public class StateClient {
                                 .id(discount.id())
                                 .name(discount.name())
                                 .type(discount.type())
+                                .fullType(CarFullTypeEnum.fromString(discount.type()))
                                 .build())
                         .toList())
                 .build();

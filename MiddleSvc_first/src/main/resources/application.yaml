@@ -6,7 +6,7 @@ server:
       max: 100
   forward-headers-strategy: framework
   servlet:
-    application-display-name: MiddleSvc
+    application-display-name: MiddleSvcAsync_first
 
 
 logging:

@@ -6,5 +6,6 @@ import lombok.Builder;
 public record DiscountModel(
         int id,
         String name,
-        String type) {
+        String type,
+        CarFullTypeEnum fullType) {
 }
