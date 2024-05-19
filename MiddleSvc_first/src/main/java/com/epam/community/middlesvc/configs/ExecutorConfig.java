@@ -14,34 +14,41 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
+/**
+ * This is a configuration class for setting up the executor service.
+ * It uses Spring's ThreadPoolTaskExecutor to create a thread pool.
+ */
 @Configuration
 @EnableAsync
 @Slf4j
 public class ExecutorConfig {
-    private final int generalAwaitTermSecs;
-    private final int generalCorePoolSize;
-    private final int generalKeepAliveSecs;
-    private final int generalMaxPollSize;
-    private final int generalQueueCapacity;
+    @Value("${general.thread.await-term-secs:10}")
+    private int generalAwaitTermSecs;
+    @Value("${general.thread.core-pool-size:50}")
+    private int generalCorePoolSize;
+    @Value("${general.thread.keep-alive-secs:60}")
+    private int generalKeepAliveSecs;
+    @Value("${general.thread.max-pool-size:100}")
+    private int generalMaxPollSize;
+    @Value("${general.thread.queue-capacity:300}")
+    private int generalQueueCapacity;
 
+    /**
+     * This method creates a TaskDecorator for propagating context.
+     *
+     * @return A TaskDecorator object.
+     */
     @Bean
     public TaskDecorator otelTaskDecorator() {
         return new ContextPropagatingTaskDecorator();
     }
 
-    public ExecutorConfig(@Value("${general.thread.await-term-secs:10}") final int generalAwaitTermSecs,
-                          @Value("${general.thread.core-pool-size:50}") final int generalCorePoolSize,
-                          @Value("${general.thread.keep-alive-secs:60}") final int generalKeepAliveSecs,
-                          @Value("${general.thread.max-pool-size:100}") final int generalMaxPollSize,
-                          @Value("${general.thread.queue-capacity:300}") final int generalQueueCapacity
-    ) {
-        this.generalAwaitTermSecs = generalAwaitTermSecs;
-        this.generalCorePoolSize = generalCorePoolSize;
-        this.generalKeepAliveSecs = generalKeepAliveSecs;
-        this.generalMaxPollSize = generalMaxPollSize;
-        this.generalQueueCapacity = generalQueueCapacity;
-    }
-
+    /**
+     * This method creates an Executor service with a thread pool.
+     * The thread pool is configured with the values defined above.
+     * @param otelTaskDecorator The TaskDecorator to be used by the Executor service.
+     * @return An Executor object.
+     */
     @Bean(name = "generalAsyncExecutor")
     public Executor securityContextExecutor(final TaskDecorator otelTaskDecorator) {
         val executor = new ThreadPoolTaskExecutor();

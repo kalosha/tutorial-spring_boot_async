@@ -20,29 +20,39 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * This is a client class for interacting with the state service.
+ * It uses the RestTemplate to make HTTP requests.
+ */
 @Component
 @Slf4j
 public class StateClient {
 
-    private final String statesUrl;
-    private final String stateInfoUrl;
-    private final String stateDiscountUrl;
-    private final String dealersByCodeUrl;
+    @Value("${com.epam.community.endpoints.states.list}")
+    private String statesUrl;
+    @Value("${com.epam.community.endpoints.states.list}/code/{code}")
+    private String stateInfoUrl;
+    @Value("${com.epam.community.endpoints.states.discount}")
+    private String stateDiscountUrl;
+    @Value("${com.epam.community.endpoints.states.dealersByCode}")
+    private String dealersByCodeUrl;
 
     private final RestTemplate restTemplate;
 
-    public StateClient(@Value("${com.epam.community.endpoints.states.list}") final String statesUrl,
-                       @Value("${com.epam.community.endpoints.states.list}/code/{code}") final String stateInfoUrl,
-                       @Value("${com.epam.community.endpoints.states.discount}") final String stateDiscountUrl,
-                       @Value("${com.epam.community.endpoints.states.dealersByCode}") final String dealersByCodeUrl,
-                       @Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
-        this.statesUrl = statesUrl;
-        this.stateInfoUrl = stateInfoUrl;
-        this.stateDiscountUrl = stateDiscountUrl;
-        this.dealersByCodeUrl = dealersByCodeUrl;
+    /**
+     * Constructor for the StateClient class.
+     *
+     * @param restTemplate The RestTemplate to be used for making HTTP requests.
+     */
+    public StateClient(@Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * This method retrieves state codes from the state service.
+     * It makes an asynchronous GET request to the state service and returns a CompletableFuture of List of String.
+     * @return A CompletableFuture of List of String containing the state codes.
+     */
     @Async("generalAsyncExecutor")
     public CompletableFuture<List<String>> getStateCodes() {
         log.info("Getting state codes from downstream service");
@@ -61,6 +71,12 @@ public class StateClient {
         );
     }
 
+    /**
+     * This method retrieves dealers by state from the state service.
+     * It makes an asynchronous GET request to the state service and returns a CompletableFuture of List of IdNameModel.
+     * @param code The code of the state to retrieve dealers for.
+     * @return A CompletableFuture of List of IdNameModel containing the dealers by state.
+     */
     @Async("generalAsyncExecutor")
     public CompletableFuture<List<IdNameModel>> getDealersByState(final String code) {
         log.info("Getting dealers from downstream service by state: {}", code);
@@ -82,6 +98,12 @@ public class StateClient {
         );
     }
 
+    /**
+     * This method retrieves state information from the state service.
+     * It makes an asynchronous GET request to the state service and returns a CompletableFuture of StateModel.
+     * @param code The code of the state to retrieve information for.
+     * @return A CompletableFuture of StateModel containing the state information.
+     */
     @Async("generalAsyncExecutor")
     public CompletableFuture<StateModel> getStateInformation(final String code) {
         log.info("Getting state information from downstream service by state: {}", code);
@@ -112,6 +134,13 @@ public class StateClient {
         );
     }
 
+    /**
+     * This method retrieves the discount by type from the state service.
+     * It makes an asynchronous GET request to the state service and returns a CompletableFuture of Integer.
+     * @param stateCode The code of the state to retrieve the discount for.
+     * @param type The type of the car to retrieve the discount for.
+     * @return A CompletableFuture of Integer containing the discount by type.
+     */
     @Async("generalAsyncExecutor")
     public CompletableFuture<Integer> getDiscountByType(final String stateCode,
                                                         final CarFullTypeEnum type) {

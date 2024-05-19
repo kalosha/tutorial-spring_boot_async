@@ -18,20 +18,34 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * This is a client class for interacting with the dealer service.
+ * It uses the RestTemplate to make HTTP requests.
+ */
 @Component
 @Slf4j
 public class DealerClient {
 
-    private final String url;
+    @Value("${com.epam.community.endpoints.dealers.cars}")
+    private String url;
 
     private final RestTemplate restTemplate;
 
-    public DealerClient(@Value("${com.epam.community.endpoints.dealers.cars}") final String url,
-                        @Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
-        this.url = url;
+    /**
+     * Constructor for the DealerClient class.
+     *
+     * @param restTemplate The RestTemplate to be used for making HTTP requests.
+     */
+    public DealerClient(@Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * This method retrieves dealer information from the dealer service.
+     * It makes an asynchronous GET request to the dealer service and returns a CompletableFuture of DealerModel.
+     * @param id The ID of the dealer to retrieve information for.
+     * @return A CompletableFuture of DealerModel containing the dealer information.
+     */
     @Async("generalAsyncExecutor")
     public CompletableFuture<DealerModel> getDealerInfo(final int id) {
         log.info("Getting dealer from downstream service by ID: {}", id);

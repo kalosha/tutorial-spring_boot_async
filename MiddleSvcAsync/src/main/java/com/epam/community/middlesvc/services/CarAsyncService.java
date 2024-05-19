@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+/**
+ * Service class for handling car-related operations asynchronously.
+ */
 @Service
 @Slf4j
 public class CarAsyncService {
@@ -26,6 +29,16 @@ public class CarAsyncService {
     private final StateClient stateClient;
     private final ManufacturerClient manufacturerClient;
     private final Executor generalAsyncExecutor;
+
+
+    /**
+     * Constructor for the CarAsyncService class.
+     *
+     * @param dealerClient         The client to access dealer data.
+     * @param stateClient          The client to access state data.
+     * @param manufacturerClient   The client to access manufacturer data.
+     * @param generalAsyncExecutor The executor to handle asynchronous operations.
+     */
 
     public CarAsyncService(final DealerClient dealerClient,
                            final StateClient stateClient,
@@ -37,7 +50,15 @@ public class CarAsyncService {
         this.generalAsyncExecutor = generalAsyncExecutor;
     }
 
-
+    /**
+     * Retrieves the cheapest cars in a given state based on the specified criteria.
+     *
+     * @param stateCode   The code of the state to get the cars from.
+     * @param carType     The type of the car (optional).
+     * @param carFullType The full type of the car (optional).
+     * @param maxCars     The maximum number of cars to retrieve.
+     * @return List of CarModel objects representing the cheapest cars in the given state.
+     */
     public List<CarModel> getCheapestCarsInState(final String stateCode,
                                                  final CarTypeEnum carType,
                                                  final CarFullTypeEnum carFullType,

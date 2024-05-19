@@ -15,22 +15,39 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * DealerController is a REST controller that handles requests related to dealers.
+ * It is annotated with @RestController to indicate that it is a REST controller.
+ * It is also annotated with @Slf4j, a Lombok annotation to provide a logger for the class.
+ * The class is tagged with "Dealer Endpoint" for Swagger documentation.
+ */
 @RestController
 @RequestMapping(RestConstants.ENDPOINT_DEALER)
 @Slf4j
 @Tag(name = "Dealer Endpoint", description = "Dealer endpoint for demo application")
 public class DealerController {
 
-    private final long sleepTime;
+    @Value("${com.epam.sleepTime:10}")
+    private long sleepTime;
     private final DealerService dealerService;
 
-    public DealerController(@Value("${com.epam.sleepTime:10}") final long sleepTime,
-                            final DealerService dealerService) {
-        this.sleepTime = sleepTime;
+    /**
+     * Constructor for DealerController.
+     * It initializes the dealerService.
+     *
+     * @param dealerService the DealerService to be used by the controller.
+     */
+    public DealerController(final DealerService dealerService) {
         this.dealerService = dealerService;
     }
 
-
+    /**
+     * This method handles GET requests to retrieve all dealers.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @return a ResponseEntity containing a list of IdNameModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getDealers",
             description = "Get all dealers",
@@ -48,6 +65,14 @@ public class DealerController {
         return ResponseEntity.ok(this.dealerService.getDealers());
     }
 
+    /**
+     * This method handles GET requests to retrieve a dealer by ID.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @param dealerId the ID of the dealer to be retrieved.
+     * @return a ResponseEntity containing a DealerModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getDealerById",
             description = "Get dealer by ID",

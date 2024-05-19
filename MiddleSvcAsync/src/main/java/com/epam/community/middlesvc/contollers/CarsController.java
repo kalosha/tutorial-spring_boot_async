@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller class for handling car-related requests.
+ * This class is annotated with @RestController, meaning it's a controller where every method returns a domain object instead of a view.
+ * It's shorthand for @Controller and @ResponseBody rolled together.
+ * The @RequestMapping annotation is used to map web requests onto specific handler classes and/or handler methods.
+ */
 @Slf4j
 @RestController
 @RequestMapping(RestConstants.CARS_ENDPOINT)
@@ -21,10 +27,24 @@ public class CarsController {
 
     private final CarAsyncService carAsyncService;
 
+    /**
+     * Constructor for the CarsController.
+     *
+     * @param carAsyncService the CarAsyncService
+     */
     public CarsController(final CarAsyncService carAsyncService) {
         this.carAsyncService = carAsyncService;
     }
 
+    /**
+     * Get cars by state code.
+     * This method is mapped to a GET request to the path "/straightforward/{stateCode}/cars".
+     * @param stateCode the state code
+     * @param carType the car type (optional)
+     * @param carFullType the car full type (optional)
+     * @param maxCars the maximum number of cars to return (optional, default is 3)
+     * @return a ResponseEntity containing a list of CarModel
+     */
     @GetMapping("/straightforward/{stateCode}/cars")
     public ResponseEntity<List<CarModel>> getCarsByState(
             @NonNull @PathVariable final String stateCode,

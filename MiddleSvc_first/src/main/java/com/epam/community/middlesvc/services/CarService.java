@@ -4,7 +4,6 @@ import com.epam.community.middlesvc.clients.DealerClient;
 import com.epam.community.middlesvc.clients.ManufacturerClient;
 import com.epam.community.middlesvc.clients.StateClient;
 import com.epam.community.middlesvc.models.*;
-import io.micrometer.context.ContextSnapshot;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -21,6 +20,10 @@ import java.util.concurrent.Executor;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
+/**
+ * This is a service class for handling operations related to cars.
+ * It uses the DealerClient, StateClient, and ManufacturerClient to retrieve car data.
+ */
 @Service
 @Slf4j
 public class CarService {
@@ -30,6 +33,14 @@ public class CarService {
     private final ManufacturerClient manufacturerClient;
     private final Executor generalAsyncExecutor;
 
+    /**
+     * Constructor for the CarService class.
+     *
+     * @param dealerClient         The DealerClient to be used for retrieving dealer data.
+     * @param stateClient          The StateClient to be used for retrieving state data.
+     * @param manufacturerClient   The ManufacturerClient to be used for retrieving manufacturer data.
+     * @param generalAsyncExecutor The Executor to be used for asynchronous operations.
+     */
     public CarService(final DealerClient dealerClient,
                       final StateClient stateClient,
                       final ManufacturerClient manufacturerClient,
@@ -40,7 +51,15 @@ public class CarService {
         this.generalAsyncExecutor = generalAsyncExecutor;
     }
 
-
+    /**
+     * This method retrieves the cheapest cars in a state.
+     * It uses the DealerClient, StateClient, and ManufacturerClient to retrieve the data.
+     * @param stateCode The code of the state to retrieve cars for.
+     * @param carType The type of the car to retrieve.
+     * @param carFullType The full type of the car to retrieve.
+     * @param maxCars The maximum number of cars to retrieve.
+     * @return A List of CarModel objects representing the cheapest cars in the state.
+     */
     public List<CarModel> getCheapestCarsInState(final String stateCode,
                                                  final CarTypeEnum carType,
                                                  final CarFullTypeEnum carFullType,
@@ -97,7 +116,6 @@ public class CarService {
                 .limit(maxCars)
                 .toList();
     }
-
 
     private CompletableFuture<StateModel> getStateInformationFuture(final String stateCode) {
         return supplyAsync(() -> this.stateClient.getStateInformation(stateCode),

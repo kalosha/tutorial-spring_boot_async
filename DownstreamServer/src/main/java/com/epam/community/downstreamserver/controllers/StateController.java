@@ -16,22 +16,39 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * StateController is a REST controller that handles requests related to states.
+ * It is annotated with @RestController to indicate that it is a REST controller.
+ * It is also annotated with @Slf4j, a Lombok annotation to provide a logger for the class.
+ * The class is tagged with "State Endpoint" for Swagger documentation.
+ */
 @RestController
 @RequestMapping(RestConstants.ENDPOINT_STATE)
 @Slf4j
 @Tag(name = "State Endpoint", description = "State endpoint for demo application")
 public class StateController {
 
-    private final long sleepTime;
+    @Value("${com.epam.sleepTime:10}")
+    private long sleepTime;
     private final StateService stateService;
 
-    public StateController(@Value("${com.epam.sleepTime:10}") final long sleepTime,
-                           final StateService stateService) {
-        this.sleepTime = sleepTime;
+    /**
+     * Constructor for StateController.
+     * It initializes the stateService.
+     *
+     * @param stateService the StateService to be used by the controller.
+     */
+    public StateController(final StateService stateService) {
         this.stateService = stateService;
     }
 
-
+    /**
+     * This method handles GET requests to retrieve all states.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @return a ResponseEntity containing a list of IdNameModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getStates",
             description = "Get all states",
@@ -49,7 +66,14 @@ public class StateController {
         return ResponseEntity.ok(this.stateService.getStates());
     }
 
-
+    /**
+     * This method handles GET requests to retrieve a state by ID.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @param stateId the ID of the state to be retrieved.
+     * @return a ResponseEntity containing a StateModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getStateById",
             description = "Get state by ID",
@@ -67,6 +91,14 @@ public class StateController {
         return ResponseEntity.ok(this.stateService.getStateById(stateId));
     }
 
+    /**
+     * This method handles GET requests to retrieve a state by code.
+     * It is not documented with Swagger annotations.
+     *
+     * @param code the code of the state to be retrieved.
+     * @return a ResponseEntity containing a StateModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @GetMapping("/code/{code}")
     public ResponseEntity<StateModel> getByCode(@PathVariable final String code) throws InterruptedException {
         log.info("Retrieving GET request State by CODE={}, sleeping for {} ms", code, this.sleepTime);
@@ -74,6 +106,15 @@ public class StateController {
         return ResponseEntity.ok(this.stateService.getStateByCode(code));
     }
 
+    /**
+     * This method handles GET requests to retrieve a discount by code and type.
+     * It is not documented with Swagger annotations.
+     *
+     * @param code the code of the state.
+     * @param type the type of the discount.
+     * @return a ResponseEntity containing the discount.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @GetMapping("/discount/{code}/{type}")
     public ResponseEntity<Integer> getDiscountByCodeAndType(@PathVariable final String code,
                                                             @PathVariable final String type) throws InterruptedException {
@@ -82,6 +123,14 @@ public class StateController {
         return ResponseEntity.ok(this.stateService.getDiscountIdByCodeAndType(code, type));
     }
 
+    /**
+     * This method handles GET requests to retrieve dealers by state ID.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @param stateId the ID of the state.
+     * @return a ResponseEntity containing a list of IdNameModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getDealersByStateId",
             description = "Get dealers by state ID",
@@ -99,6 +148,14 @@ public class StateController {
         return ResponseEntity.ok(this.stateService.getDealersByStateId(stateId));
     }
 
+    /**
+     * This method handles GET requests to retrieve dealers by state code.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @param stateCode the code of the state.
+     * @return a ResponseEntity containing a list of IdNameModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getDealersByCode",
             description = "Get dealers by State Code",

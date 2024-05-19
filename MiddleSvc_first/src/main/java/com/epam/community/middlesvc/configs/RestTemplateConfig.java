@@ -14,6 +14,10 @@ import org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode;
 
 import java.util.List;
 
+/**
+ * This is a configuration class for setting up the RestTemplate.
+ * It uses Spring's RestTemplateBuilder to create a RestTemplate.
+ */
 @Slf4j
 @Configuration
 public class RestTemplateConfig {
@@ -24,6 +28,11 @@ public class RestTemplateConfig {
     @Value("${http.connection.request.timeout:10000}")
     private int httpConnectionRequestTimeout;
 
+    /**
+     * This method creates a HttpComponentsClientHttpRequestFactory with the configured timeout values.
+     *
+     * @return A HttpComponentsClientHttpRequestFactory object.
+     */
     @Bean
     public HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory() {
 
@@ -34,6 +43,11 @@ public class RestTemplateConfig {
         return factory;
     }
 
+    /**
+     * This method creates a RestTemplateCustomizer.
+     * The customizer sets the request factory, URI template handler, and adds an interceptor to the RestTemplate.
+     * @return A RestTemplateCustomizer object.
+     */
     @Bean
     RestTemplateCustomizer restTemplateCustomizer() {
         return restTemplate -> {
@@ -52,6 +66,11 @@ public class RestTemplateConfig {
         };
     }
 
+    /**
+     * This method creates a RestTemplate using the RestTemplateBuilder.
+     * @param restTemplateBuilder The RestTemplateBuilder to be used for creating the RestTemplate.
+     * @return A RestTemplate object.
+     */
     @Bean(name = "defaultRestTemplate")
     public RestTemplate currencyRestTemplate(final RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build();

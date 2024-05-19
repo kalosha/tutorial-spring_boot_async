@@ -26,14 +26,28 @@ import java.util.stream.Collectors;
 public class SwaggerTransformerConfig {
     private final Environment environment;
 
-    private final String profile;
+    @Value("${com.epam.community.profile:dev}")
+    private String profile;
 
-    public SwaggerTransformerConfig(final Environment environment,
-                                    @Value("${com.epam.community.profile:dev}") final String profile) {
+    /**
+     * Constructor for the SwaggerTransformerConfig class.
+     *
+     * @param environment The environment in which the application is running.
+     */
+    public SwaggerTransformerConfig(final Environment environment) {
         this.environment = environment;
-        this.profile = profile;
     }
 
+    /**
+     * Bean for transforming the Swagger index page.
+     *
+     * @param swaggerUiConfig           The configuration properties for the Swagger UI.
+     * @param swaggerUiOAuthProperties  The OAuth properties for the Swagger UI.
+     * @param swaggerUiConfigParameters The configuration parameters for the Swagger UI.
+     * @param swaggerWelcomeCommon      The common welcome page for the Swagger UI.
+     * @param objectMapperProvider      The provider for the ObjectMapper.
+     * @return A SwaggerIndexTransformer that transforms the Swagger index page.
+     */
     @Bean
     public SwaggerIndexTransformer swaggerIndexTransformer(
             final SwaggerUiConfigProperties swaggerUiConfig,
@@ -48,10 +62,22 @@ public class SwaggerTransformerConfig {
                 objectMapperProvider, this.environment);
     }
 
-
+    /**
+     * Class for transforming the Swagger CSS.
+     */
     class TransformSwaggerCSS extends SwaggerIndexPageTransformer {
         private final Environment environment;
 
+        /**
+         * Constructor for the TransformSwaggerCSS class.
+         *
+         * @param swaggerUiConfig The configuration properties for the Swagger UI.
+         * @param swaggerUiOAuthProperties The OAuth properties for the Swagger UI.
+         * @param swaggerUiConfigParameters The configuration parameters for the Swagger UI.
+         * @param swaggerWelcomeCommon The common welcome page for the Swagger UI.
+         * @param objectMapperProvider The provider for the ObjectMapper.
+         * @param environment The environment in which the application is running.
+         */
         public TransformSwaggerCSS(final SwaggerUiConfigProperties swaggerUiConfig,
                                    final SwaggerUiOAuthProperties swaggerUiOAuthProperties,
                                    final SwaggerUiConfigParameters swaggerUiConfigParameters,
@@ -66,6 +92,15 @@ public class SwaggerTransformerConfig {
             this.environment = environment;
         }
 
+        /**
+         * Transforms the resource.
+         *
+         * @param request The HTTP request.
+         * @param resource The resource to be transformed.
+         * @param transformer The resource transformer chain.
+         * @return The transformed resource.
+         * @throws IOException If an I/O error occurs.
+         */
         @Override
         public Resource transform(final HttpServletRequest request,
                                   final Resource resource,
@@ -85,6 +120,11 @@ public class SwaggerTransformerConfig {
         }
     }
 
+    /**
+     * Returns the custom CSS.
+     *
+     * @return The custom CSS.
+     */
     private String getCustomCss() {
         return "body { background-color: rgba(0, 255, 0, 0.50) !important; }";
     }

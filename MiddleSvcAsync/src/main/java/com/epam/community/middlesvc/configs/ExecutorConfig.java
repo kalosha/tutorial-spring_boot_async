@@ -14,34 +14,42 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
+/**
+ * Configuration class for setting up the executor service.
+ * This class is annotated with @Configuration to indicate that it is a source of bean definitions.
+ * The @EnableAsync annotation switches on Spring’s ability to run @Async methods in a background thread pool.
+ */
 @Configuration
 @EnableAsync
 @Slf4j
 public class ExecutorConfig {
-    private final int generalAwaitTermSecs;
-    private final int generalCorePoolSize;
-    private final int generalKeepAliveSecs;
-    private final int generalMaxPollSize;
-    private final int generalQueueCapacity;
+    @Value("${general.thread.await-term-secs:10}")
+    private int generalAwaitTermSecs;
+    @Value("${general.thread.core-pool-size:50}")
+    private int generalCorePoolSize;
+    @Value("${general.thread.keep-alive-secs:60}")
+    private int generalKeepAliveSecs;
+    @Value("${general.thread.max-pool-size:100}")
+    private int generalMaxPollSize;
+    @Value("${general.thread.queue-capacity:300}")
+    private int generalQueueCapacity;
 
+    /**
+     * Bean for the OpenTelemetry task decorator.
+     *
+     * @return a new instance of ContextPropagatingTaskDecorator
+     */
     @Bean
     public TaskDecorator otelTaskDecorator() {
         return new ContextPropagatingTaskDecorator();
     }
 
-    public ExecutorConfig(@Value("${general.thread.await-term-secs:10}") final int generalAwaitTermSecs,
-                          @Value("${general.thread.core-pool-size:50}") final int generalCorePoolSize,
-                          @Value("${general.thread.keep-alive-secs:60}") final int generalKeepAliveSecs,
-                          @Value("${general.thread.max-pool-size:100}") final int generalMaxPollSize,
-                          @Value("${general.thread.queue-capacity:300}") final int generalQueueCapacity
-    ) {
-        this.generalAwaitTermSecs = generalAwaitTermSecs;
-        this.generalCorePoolSize = generalCorePoolSize;
-        this.generalKeepAliveSecs = generalKeepAliveSecs;
-        this.generalMaxPollSize = generalMaxPollSize;
-        this.generalQueueCapacity = generalQueueCapacity;
-    }
-
+    /**
+     * Bean for the executor service.
+     * This method configures and initializes a ThreadPoolTaskExecutor with the properties defined above.
+     * @param otelTaskDecorator the OpenTelemetry task decorator
+     * @return an Executor wrapped with a ContextExecutorService
+     */
     @Bean(name = "generalAsyncExecutor")
     public Executor securityContextExecutor(final TaskDecorator otelTaskDecorator) {
         val executor = new ThreadPoolTaskExecutor();

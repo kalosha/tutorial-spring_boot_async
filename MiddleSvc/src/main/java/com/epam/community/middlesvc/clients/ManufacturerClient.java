@@ -10,19 +10,32 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+/**
+ * This class is a client for interacting with the Dealer service.
+ * It uses Spring's RestTemplate to make HTTP requests.
+ */
 @Component
 @Slf4j
 public class ManufacturerClient {
-    private final String url;
-
+    @Value("${com.epam.community.endpoints.manufacturers.price}")
+    private String url;
     private final RestTemplate restTemplate;
 
-    public ManufacturerClient(@Value("${com.epam.community.endpoints.manufacturers.price}") final String url,
-                              @Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
-        this.url = url;
+    /**
+     * Constructs a new ManufacturerClient.
+     *
+     * @param restTemplate the RestTemplate to use for HTTP requests
+     */
+    public ManufacturerClient(@Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Retrieves the price of a car from the Manufacturer service by its ID.
+     *
+     * @param id the ID of the car
+     * @return the price of the car
+     */
     public Integer getPriceByCarId(int id) {
         log.info("Getting price from downstream service by car ID: {}", id);
         return this.restTemplate.exchange(

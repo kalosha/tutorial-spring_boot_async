@@ -14,6 +14,10 @@ import org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode;
 
 import java.util.List;
 
+/**
+ * This class is responsible for configuring the RestTemplate used for HTTP communication.
+ * It uses Spring's RestTemplateBuilder for creating RestTemplate instances.
+ */
 @Slf4j
 @Configuration
 public class RestTemplateConfig {
@@ -24,6 +28,11 @@ public class RestTemplateConfig {
     @Value("${http.connection.request.timeout:10000}")
     private int httpConnectionRequestTimeout;
 
+    /**
+     * Configures the HttpComponentsClientHttpRequestFactory with connection and request timeouts.
+     *
+     * @return a configured HttpComponentsClientHttpRequestFactory instance.
+     */
     @Bean
     public HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory() {
 
@@ -34,6 +43,10 @@ public class RestTemplateConfig {
         return factory;
     }
 
+    /**
+     * Customizes the RestTemplate instance with a request factory, URI template handler, and interceptors.
+     * @return a RestTemplateCustomizer instance.
+     */
     @Bean
     RestTemplateCustomizer restTemplateCustomizer() {
         return restTemplate -> {
@@ -52,6 +65,11 @@ public class RestTemplateConfig {
         };
     }
 
+    /**
+     * Creates a RestTemplate instance using the RestTemplateBuilder.
+     * @param restTemplateBuilder the RestTemplateBuilder to be used for creating the RestTemplate instance.
+     * @return a RestTemplate instance.
+     */
     @Bean(name = "defaultRestTemplate")
     public RestTemplate currencyRestTemplate(final RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build();

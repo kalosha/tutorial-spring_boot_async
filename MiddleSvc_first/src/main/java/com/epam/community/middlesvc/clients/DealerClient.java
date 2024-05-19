@@ -17,20 +17,33 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This is a client class for interacting with the Dealer service.
+ * It uses Spring's RestTemplate to make HTTP requests.
+ */
 @Component
 @Slf4j
 public class DealerClient {
 
-    private final String url;
+    @Value("${com.epam.community.endpoints.dealers.cars}")
+    private String url;
 
     private final RestTemplate restTemplate;
 
-    public DealerClient(@Value("${com.epam.community.endpoints.dealers.cars}") final String url,
-                        @Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
-        this.url = url;
+    /**
+     * Constructor for the DealerClient class.
+     *
+     * @param restTemplate The RestTemplate to be used for making HTTP requests.
+     */
+    public DealerClient(@Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * This method retrieves dealer information from the Dealer service.
+     * @param id The ID of the dealer to retrieve.
+     * @return A DealerModel object containing the dealer's information.
+     */
     public DealerModel getDealerInfo(int id) {
         log.info("Getting dealer from downstream service by ID: {}", id);
         val dealerResponse = Objects.requireNonNull(

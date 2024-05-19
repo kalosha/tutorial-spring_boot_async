@@ -14,20 +14,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * ManufacturerController is a REST controller that handles requests related to manufacturers.
+ * It is annotated with @RestController to indicate that it is a REST controller.
+ * It is also annotated with @Slf4j, a Lombok annotation to provide a logger for the class.
+ * The class is tagged with "Manufacturer Endpoint" for Swagger documentation.
+ */
 @RestController
 @Slf4j
 @RequestMapping(RestConstants.ENDPOINT_MANUFACTURER)
 @Tag(name = "Manufacturer Endpoint", description = "Manufacturer endpoint for demo application")
 public class ManufacturerController {
-    private final long sleepTime;
+    @Value("${com.epam.sleepTime:10}")
+    private long sleepTime;
     private final ManufacturerService manufacturerService;
 
-    public ManufacturerController(@Value("${com.epam.sleepTime:10}") final long sleepTime,
-                                  final ManufacturerService manufacturerService) {
-        this.sleepTime = sleepTime;
+    /**
+     * Constructor for ManufacturerController.
+     * It initializes the manufacturerService.
+     *
+     * @param manufacturerService the ManufacturerService to be used by the controller.
+     */
+    public ManufacturerController(final ManufacturerService manufacturerService) {
         this.manufacturerService = manufacturerService;
     }
 
+    /**
+     * This method handles GET requests to retrieve all manufacturers.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @return a ResponseEntity containing a list of IdNameModel.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getManufacturers",
             description = "Get all manufacturers",
@@ -45,6 +63,14 @@ public class ManufacturerController {
         return ResponseEntity.ok(this.manufacturerService.getManufacturers());
     }
 
+    /**
+     * This method handles GET requests to retrieve a car price by car ID.
+     * It is annotated with @Operation to provide Swagger documentation.
+     *
+     * @param carId the ID of the car to retrieve the price for.
+     * @return a ResponseEntity containing the price of the car.
+     * @throws InterruptedException if the thread sleep is interrupted.
+     */
     @Operation(
             summary = "getPriceCarById",
             description = "Get Car Price by CarID",

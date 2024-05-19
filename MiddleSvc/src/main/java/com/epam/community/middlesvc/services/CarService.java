@@ -15,6 +15,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class is responsible for handling business logic related to cars.
+ * It uses the DealerClient, StateClient, and ManufacturerClient for data fetching.
+ */
 @Service
 @Slf4j
 public class CarService {
@@ -23,6 +27,13 @@ public class CarService {
     private final StateClient stateClient;
     private final ManufacturerClient manufacturerClient;
 
+    /**
+     * Constructor for the CarService class.
+     *
+     * @param dealerClient       the DealerClient to be used for fetching dealer data.
+     * @param stateClient        the StateClient to be used for fetching state data.
+     * @param manufacturerClient the ManufacturerClient to be used for fetching manufacturer data.
+     */
     public CarService(final DealerClient dealerClient,
                       final StateClient stateClient,
                       final ManufacturerClient manufacturerClient) {
@@ -31,7 +42,15 @@ public class CarService {
         this.manufacturerClient = manufacturerClient;
     }
 
-
+    /**
+     * This method fetches the cheapest cars in a state.
+     * It optionally filters the cars by car type and car full type, and limits the number of cars returned.
+     * @param stateCode the state code.
+     * @param carType the car type (optional).
+     * @param carFullType the car full type (optional).
+     * @param maxCars the maximum number of cars to return.
+     * @return a list of CarModel objects representing the cheapest cars in the state.
+     */
     public List<CarModel> getCheapestCarsInState(final String stateCode,
                                                  final CarTypeEnum carType,
                                                  final CarFullTypeEnum carFullType,
@@ -81,6 +100,13 @@ public class CarService {
                 .toList();
     }
 
+    /**
+     * This method generates a unique car ID.
+     * @param stateCode the state code.
+     * @param dealerId the dealer ID.
+     * @param carId the car ID.
+     * @return a string representing the unique car ID.
+     */
     private static String generateCarId(final String stateCode,
                                         final int dealerId,
                                         final int carId) {

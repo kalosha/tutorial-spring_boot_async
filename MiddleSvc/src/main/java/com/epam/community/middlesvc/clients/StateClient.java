@@ -18,29 +18,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This class is a client for interacting with the State service.
+ * It uses Spring's RestTemplate to make HTTP requests.
+ */
 @Component
 @Slf4j
 public class StateClient {
 
-    private final String statesUrl;
-    private final String stateInfoUrl;
-    private final String stateDiscountUrl;
-    private final String dealersByCodeUrl;
+    @Value("${com.epam.community.endpoints.states.list}")
+    private String statesUrl;
+    @Value("${com.epam.community.endpoints.states.list}/code/{code}")
+    private String stateInfoUrl;
+    @Value("${com.epam.community.endpoints.states.discount}")
+    private String stateDiscountUrl;
+    @Value("${com.epam.community.endpoints.states.dealersByCode}")
+    private String dealersByCodeUrl;
 
     private final RestTemplate restTemplate;
 
-    public StateClient(@Value("${com.epam.community.endpoints.states.list}") final String statesUrl,
-                       @Value("${com.epam.community.endpoints.states.list}/code/{code}") final String stateInfoUrl,
-                       @Value("${com.epam.community.endpoints.states.discount}") final String stateDiscountUrl,
-                       @Value("${com.epam.community.endpoints.states.dealersByCode}") final String dealersByCodeUrl,
-                       @Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
-        this.statesUrl = statesUrl;
-        this.stateInfoUrl = stateInfoUrl;
-        this.stateDiscountUrl = stateDiscountUrl;
-        this.dealersByCodeUrl = dealersByCodeUrl;
+    /**
+     * Constructor for the StateClient class.
+     *
+     * @param restTemplate the RestTemplate instance to use for making HTTP requests
+     */
+    public StateClient(@Qualifier("defaultRestTemplate") final RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Fetches the state codes from the downstream service.
+     *
+     * @return a list of state codes.
+     */
     public List<String> getStateCodes() {
         log.info("Getting state codes from downstream service");
         return Objects.requireNonNull(
@@ -56,6 +66,11 @@ public class StateClient {
                 .toList();
     }
 
+    /**
+     * Fetches the dealers by state from the downstream service.
+     * @param code the state code.
+     * @return a list of IdNameModel objects representing the dealers.
+     */
     public List<IdNameModel> getDealersByState(final String code) {
         log.info("Getting dealers from downstream service by state: {}", code);
         return Objects.requireNonNull(
@@ -71,6 +86,11 @@ public class StateClient {
                 .toList();
     }
 
+    /**
+     * Fetches the state information from the downstream service.
+     * @param code the state code.
+     * @return a StateModel object representing the state information.
+     */
     public StateModel getStateInformation(final String code) {
         log.info("Getting state information from downstream service by state: {}", code);
         val stateResponse = Objects.requireNonNull(this.restTemplate.exchange(
@@ -93,6 +113,12 @@ public class StateClient {
         );
     }
 
+    /**
+     * Fetches the discount by type from the downstream service.
+     * @param stateCode the state code.
+     * @param type the discount type.
+     * @return the discount value.
+     */
     public int getDiscountByType(final String stateCode, final String type) {
         log.info("Getting discount by type from downstream service by state: {} and type: {}", stateCode, type);
         try {
