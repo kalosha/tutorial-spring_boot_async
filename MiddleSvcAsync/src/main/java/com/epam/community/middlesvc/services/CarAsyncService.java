@@ -29,6 +29,8 @@ public class CarAsyncService {
     private final StateClient stateClient;
     private final ManufacturerClient manufacturerClient;
     private final Executor generalAsyncExecutor;
+    private final Executor loopAsyncExecutor0;
+    private final Executor loopAsyncExecutor1;
 
 
     /**
@@ -43,11 +45,15 @@ public class CarAsyncService {
     public CarAsyncService(final DealerClient dealerClient,
                            final StateClient stateClient,
                            final ManufacturerClient manufacturerClient,
-                           @Qualifier("generalAsyncExecutor") final Executor generalAsyncExecutor) {
+                           @Qualifier("generalAsyncExecutor") final Executor generalAsyncExecutor,
+                           @Qualifier("loopAsyncExecutor_0") final Executor loopAsyncExecutor0,
+                           @Qualifier("loopAsyncExecutor_1") final Executor loopAsyncExecutor1) {
         this.dealerClient = dealerClient;
         this.stateClient = stateClient;
         this.manufacturerClient = manufacturerClient;
         this.generalAsyncExecutor = generalAsyncExecutor;
+        this.loopAsyncExecutor0 = loopAsyncExecutor0;
+        this.loopAsyncExecutor1 = loopAsyncExecutor1;
     }
 
     /**
@@ -82,11 +88,11 @@ public class CarAsyncService {
                                                         return manufacturerCollectedFeatures.stream().map(CompletableFuture::join)
                                                                 .toList();
                                                     }
-                                            , this.generalAsyncExecutor);
+                                                    , this.loopAsyncExecutor0);
                                     return dealerInfo.join().stream().toList();
                                 })
                         .toList(),
-                        this.generalAsyncExecutor);
+                        this.loopAsyncExecutor1);
 
         collectedFeatures.join().stream()
                 .flatMap(Collection::stream)

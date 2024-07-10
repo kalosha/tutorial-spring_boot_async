@@ -126,6 +126,6 @@ public class SwaggerTransformerConfig {
      * @return The custom CSS.
      */
     private String getCustomCss() {
-        return "body { background-color: rgba(0, 255, 0, 0.50) !important; }";
+        return "body { background-color: rgba(255, 0, 0, 0.10) !important; }";
     }
 }

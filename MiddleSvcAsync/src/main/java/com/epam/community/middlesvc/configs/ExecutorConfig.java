@@ -25,9 +25,9 @@ import java.util.concurrent.Executor;
 public class ExecutorConfig {
     @Value("${general.thread.await-term-secs:10}")
     private int generalAwaitTermSecs;
-    @Value("${general.thread.core-pool-size:50}")
+    @Value("${general.thread.core-pool-size:10}")
     private int generalCorePoolSize;
-    @Value("${general.thread.keep-alive-secs:60}")
+    @Value("${general.thread.keep-alive-secs:10}")
     private int generalKeepAliveSecs;
     @Value("${general.thread.max-pool-size:100}")
     private int generalMaxPollSize;
@@ -60,6 +60,38 @@ public class ExecutorConfig {
         executor.setQueueCapacity(this.generalQueueCapacity);
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setThreadNamePrefix("async-executor-");
+        executor.setTaskDecorator(otelTaskDecorator);
+        executor.initialize();
+
+        return ContextExecutorService.wrap(executor.getThreadPoolExecutor(), ContextSnapshotFactory.builder().build()::captureAll);
+    }
+
+    @Bean(name = "loopAsyncExecutor_0")
+    public Executor loop_0_ContextExecutor(final TaskDecorator otelTaskDecorator) {
+        val executor = new ThreadPoolTaskExecutor();
+        executor.setAwaitTerminationSeconds(this.generalAwaitTermSecs);
+        executor.setCorePoolSize(this.generalCorePoolSize);
+        executor.setKeepAliveSeconds(this.generalKeepAliveSecs);
+        executor.setMaxPoolSize(this.generalMaxPollSize);
+        executor.setQueueCapacity(this.generalQueueCapacity);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setThreadNamePrefix("loop-executor-0-");
+        executor.setTaskDecorator(otelTaskDecorator);
+        executor.initialize();
+
+        return ContextExecutorService.wrap(executor.getThreadPoolExecutor(), ContextSnapshotFactory.builder().build()::captureAll);
+    }
+
+    @Bean(name = "loopAsyncExecutor_1")
+    public Executor loop_1_ContextExecutor(final TaskDecorator otelTaskDecorator) {
+        val executor = new ThreadPoolTaskExecutor();
+        executor.setAwaitTerminationSeconds(this.generalAwaitTermSecs);
+        executor.setCorePoolSize(this.generalCorePoolSize);
+        executor.setKeepAliveSeconds(this.generalKeepAliveSecs);
+        executor.setMaxPoolSize(this.generalMaxPollSize);
+        executor.setQueueCapacity(this.generalQueueCapacity);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setThreadNamePrefix("loop-executor-1-");
         executor.setTaskDecorator(otelTaskDecorator);
         executor.initialize();
 

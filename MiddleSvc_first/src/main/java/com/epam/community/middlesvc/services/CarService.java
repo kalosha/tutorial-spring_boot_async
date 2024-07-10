@@ -70,7 +70,7 @@ public class CarService {
         val carModels = new HashMap<String, CarModel>();
         val stateInfo = this.getStateInformationFuture(stateCode).join();
         val collectedFeatures = this.getDealersByStateFuture(stateCode)
-                .thenApply(dealers -> dealers.stream()
+                .thenApplyAsync(dealers -> dealers.stream()
                         .map(
                                 dealer -> {
                                     val dealerInfoFuture = this.getDealerInfoFuture(dealer.id())
@@ -87,7 +87,8 @@ public class CarService {
                                             );
                                     return dealerInfoFuture.join().stream().toList();
                                 })
-                        .toList());
+                                .toList(),
+                        this.generalAsyncExecutor);
 
         collectedFeatures.join().stream()
                 .flatMap(Collection::stream)
