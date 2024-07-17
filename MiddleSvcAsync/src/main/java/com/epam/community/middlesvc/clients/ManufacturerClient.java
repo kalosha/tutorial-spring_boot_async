@@ -3,8 +3,6 @@ package com.epam.community.middlesvc.clients;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -35,20 +33,21 @@ public class ManufacturerClient {
     /**
      * This method retrieves the price of a car from the manufacturer service.
      * It makes an asynchronous GET request to the manufacturer service and returns a CompletableFuture of Integer.
+     *
      * @param id The ID of the car to retrieve the price for.
      * @return A CompletableFuture of Integer containing the price of the car.
      */
     @Async("generalAsyncExecutor")
     public CompletableFuture<Integer> getPriceByCarId(final int id) {
+        return CompletableFuture.completedFuture(this.request(id));
+    }
+
+    private Integer request(final int id) {
         log.info("Getting price from downstream service by car ID: {}", id);
-        return CompletableFuture.completedFuture(this.restTemplate.exchange(
-                        this.url,
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<Integer>() {
-                        },
-                        Map.of("id", id)
-                ).getBody()
+        return this.restTemplate.getForObject(
+                this.url,
+                Integer.class,
+                Map.of("id", id)
         );
     }
 }
